@@ -1,0 +1,3 @@
+root_id      = "airstrip"
+location     = "westeurope"
+allowed_envs = ["dev", "test", "prod"]

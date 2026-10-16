@@ -44,21 +44,50 @@ Tenant Root Group
 └── airstrip
     ├── platform
     │   ├── management
-    │   └── connectivity
+    │   ├── connectivity
+    │   └── identity
     ├── landingzones
     │   ├── corp
+    │   │   └── <workload MGs>
     │   └── online
+    │       └── <workload MGs>
     ├── sandbox
     └── decommissioned
 ```
 
+Everything is Terraform and lives in `terraform/`, in folders that mirror the management group hierarchy. Each folder is its own stack with its own state. Workload groups under `corp` and `online` come from the `workloads` variable in `platform/`.
+
+```bash
+cd terraform/platform
+cp terraform.tfvars.example terraform.tfvars   # edit root_id, workloads, subscriptions
+terraform init && terraform apply
+```
+
+See [Repository structure](#repository-structure) for the apply order.
+
 ### Policies
 
-A small, curated set of built-in policies: allowed regions, required tags, diagnostic settings to the central workspace. Built-in only, so you always know what is being enforced.
+A small, curated set of built-in policies. Built-in only (plus two tiny wrappers), so you always know what is being enforced.
+
+| Scope | Policy | Effect |
+|-------|--------|--------|
+| `airstrip` | Allowed locations and resource group locations (`allowed_locations`) | Deny |
+| `airstrip` | Diagnostic settings (allLogs) and Activity Log to the central workspace | DeployIfNotExists |
+| `landingzones` | Resource groups need tags `owner`, `cost-center`, `env` (`env` in `allowed_envs`) | Deny |
+| `landingzones` | Resources inherit `owner`, `cost-center`, `env` from their resource group | Modify |
+| `corp` | No public endpoints for Storage, Key Vault, SQL, App Service, Functions, Cosmos DB, NIC public IPs (`public_endpoints_effect`) | Audit, switch to Deny |
+
+Policies with DeployIfNotExists/Modify run with a managed identity. They apply to new resources right away. Existing resources need a remediation task in the portal.
+
+The providers `Microsoft.Security`, `Microsoft.OperationalInsights` and `Microsoft.PolicyInsights` must be registered in the management subscription (`az provider register --namespace <name>`).
 
 ### Logging
 
-A central Log Analytics workspace in the management subscription that all subscriptions report to.
+A central Log Analytics workspace (`log-airstrip`, 30 days retention) in the management subscription that all subscriptions report to.
+
+### Defender for Cloud
+
+Foundational CSPM is free and always on. Servers, Storage, Key Vault and ARM plans are off by default and switched on with `defender_plans`. They only apply to the management subscription for now.
 
 ### Network
 
@@ -97,15 +126,15 @@ az deployment tenant create \
 ## Repository structure
 
 ```
-airstrip/
-├── main.bicep                    # Entry point, wires everything together
-├── main.bicepparam               # Your configuration, the only file you need to edit
-└── modules/
-    ├── management-groups.bicep   # Hierarchy and subscription placement
-    ├── policies.bicep            # Policy assignments
-    ├── logging.bicep             # Log Analytics workspace
-    └── network.bicep             # Hub virtual network
+terraform/
+├── bootstrap/               # 0. State storage account (local state, run once)
+├── platform/                # 1. Management groups, subscription placement, root policies
+│   └── management/          #    Local module: Log Analytics, Defender, diagnostic settings
+└── landingzones/            # 2. Required tags for corp + online
+    └── corp/                # 3. No public endpoints
 ```
+
+Run the stacks in this order with `terraform init && terraform apply`. `platform/` is one stack and calls its subfolders as local modules, so one apply covers the management groups and everything under `platform`. Each stack has a `terraform.tfvars.example`. Later stacks look up the management groups by name (`<root_id>-corp`), so they only need the same `root_id`. The `platform/` stack applies to the subscription in `ARM_SUBSCRIPTION_ID`, which must be the management subscription.
 
 ## Ready for take-off
 
