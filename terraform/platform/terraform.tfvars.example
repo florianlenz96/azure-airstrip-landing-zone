@@ -1,0 +1,30 @@
+root_id = "airstrip"
+
+workloads = {
+  corp = {
+    erp = "ERP"
+    hr  = "HR"
+  }
+  online = {
+    webshop = "Webshop"
+  }
+}
+
+subscriptions = {
+  management   = ["<management-subscription-id>"]
+  connectivity = []
+  corp-erp     = []
+}
+
+allowed_locations = ["westeurope", "germanywestcentral"]
+
+# Management module
+logging_location   = "westeurope"
+log_retention_days = 30
+
+defender_plans = {
+  servers   = false
+  storage   = false
+  key_vault = false
+  arm       = false
+}
