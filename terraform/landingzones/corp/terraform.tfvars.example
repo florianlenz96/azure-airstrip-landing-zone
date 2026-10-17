@@ -1,4 +1,0 @@
-root_id = "airstrip"
-
-# Audit first, switch to Deny when corp is clean
-public_endpoints_effect = "Audit"

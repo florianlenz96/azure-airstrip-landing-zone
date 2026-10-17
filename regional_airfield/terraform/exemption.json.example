@@ -1,0 +1,9 @@
+{
+  "temporary-erp-migration": {
+    "scope": "/subscriptions/33333333-3333-4333-8333-333333333333/resourceGroups/rg-erp/providers/Microsoft.Storage/storageAccounts/replaceme",
+    "description": "Temporary migration waiver; service firewall restricts access until private connectivity is verified.",
+    "category": "Waiver",
+    "expires_on": "REPLACE_WITH_A_FUTURE_RFC3339_TIMESTAMP",
+    "reference_ids": ["storage"]
+  }
+}
