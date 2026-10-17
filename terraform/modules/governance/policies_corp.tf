@@ -80,16 +80,6 @@ resource "azurerm_policy_definition" "storage_private_only" {
   })
 }
 
-moved {
-  from = azurerm_policy_set_definition.no_public_endpoints
-  to   = azurerm_policy_set_definition.no_public_endpoints[0]
-}
-
-moved {
-  from = azurerm_management_group_policy_assignment.no_public_endpoints
-  to   = azurerm_management_group_policy_assignment.no_public_endpoints[0]
-}
-
 locals {
   exemptions = var.stage == "regional_airfield" ? var.exemptions : {}
 }

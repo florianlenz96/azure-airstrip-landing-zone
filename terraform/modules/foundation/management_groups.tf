@@ -30,11 +30,6 @@ resource "azurerm_management_group" "connectivity" {
   parent_management_group_id = azurerm_management_group.platform.id
 }
 
-moved {
-  from = azurerm_management_group.connectivity
-  to   = azurerm_management_group.connectivity[0]
-}
-
 resource "azurerm_management_group" "identity" {
   name                       = "${var.root_id}-identity"
   display_name               = "Identity"

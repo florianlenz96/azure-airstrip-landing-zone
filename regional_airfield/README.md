@@ -146,7 +146,6 @@ exemptions through another platform apply.
 
 Deny does not retrofit existing services. Assignment updates and exemption
 creation are not atomic; coordinate workload changes during rollout.
-Older separate policy states require [state migration](../docs/state-migration.md).
 
 ## Exemptions
 
@@ -174,7 +173,3 @@ and both var files with `terraform plan -destroy -out=destroy.tfplan`, review it
 then explicitly apply that plan. Remove subscription associations/exemptions in
 the platform separately. Destroy spokes before the hub; never remove state to
 pretend infrastructure has been decommissioned.
-
-If an earlier version recorded inventory, its
-`airstrip-inventory.tfstate` only contains `terraform_data`, not Azure resources.
-Archive it after confirming migration; no deployment uses it now.

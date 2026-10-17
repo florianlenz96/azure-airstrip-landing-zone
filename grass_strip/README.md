@@ -52,6 +52,3 @@ Use [Regional airfield](../regional_airfield/README.md#upgrading-from-grass-stri
 when private networking is needed. Copy your platform variables and backend into
 the Regional root, keep the **same state key**, and initialize it there.
 Both roots retain the same module addresses; do not apply them independently.
-
-Existing installations from the earlier layout need the
-[state migration procedure](../docs/state-migration.md) before applying.

@@ -194,7 +194,7 @@ deployment slot, hosting-environment exception, frontend or public IP resource.
 The [built-in definitions](https://github.com/Azure/azure-policy/tree/master/built-in-policies/policyDefinitions)
 are supplemented by a strict Storage rule requiring public network access to be
 `Disabled` (not `SecuredByPerimeter`). The initiative retains its old parameter
-schema for migration compatibility, but Regional airfield always assigns Deny;
+schema, but Regional airfield always assigns Deny;
 there is no global Audit/Disabled switch. Explicit expiring exemptions are
 described in the [Regional guide](regional_airfield/README.md#exemptions).
 
@@ -206,10 +206,9 @@ inspected; see the [network boundaries](regional_airfield/README.md#subnets-and-
 
 ## Already airborne? Keep your flight log
 
-Read [state migration](docs/state-migration.md) before applying this layout.
-Within-state moved blocks preserve foundation, hub and spoke resources. Separate
-old tag/Corp policy states must be explicitly transferred into the platform state
-before applying. There is no script or automatic cross-state migration.
+Start with a fresh deployment; migration from earlier repository layouts is not
+supported. The Grass strip-to-Regional upgrade keeps the same platform state and
+module addresses.
 
 The [Regional guide](regional_airfield/README.md) covers stage upgrades, onboarding,
 costs and explicit network decommissioning. With native Terraform, reviewing plans,
