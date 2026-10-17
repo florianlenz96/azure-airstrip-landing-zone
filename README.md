@@ -9,8 +9,6 @@ Airstrip helps you build your Azure landing zone one expansion at a time:
 prepare the ground, land your first applications, then add the infrastructure
 your growing fleet actually needs. Your progress carries forward.
 
-[airstrip.cloud](https://airstrip.cloud)
-
 ## Your flight path
 
 ```text
